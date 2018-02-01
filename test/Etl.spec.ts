@@ -242,4 +242,18 @@ describe('Etl', () => {
             });
     });
 
+    it('should pipe inital observable', done => {
+        const context = 1;
+        etl = new Etl(context);
+        etl
+            .addTransformer(dummyTransformer)
+            .addLoader(dummyLoader)
+            .start(Observable.of('hi'))
+            .subscribe(null, null, () => {
+                expect((dummyTransformer.process as any).mock.calls[0]).toContain('hi');
+                expect((dummyLoader.write as any).mock.calls[0]).toContain('hi');
+                done();
+            });
+    });
+
 });
